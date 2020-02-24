@@ -23,6 +23,7 @@ import org.hibernate.annotations.DynamicUpdate;
  */
 @Entity
 @Data
+@Table(name="CardScheme")
 @DynamicUpdate
 public class CardScheme {
 

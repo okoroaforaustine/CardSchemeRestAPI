@@ -12,8 +12,10 @@ import com.mint.cardscheme.dto.Response;
 import com.mint.cardscheme.entity.AppUser;
 import com.mint.cardscheme.entity.CardScheme;
 import com.mint.cardscheme.repository.CardSchemeRepository;
+import com.mint.cardscheme.service.KafkaProducerService;
 import com.mint.cardscheme.service.MintRestServiceClient;
 import com.mint.cardscheme.util.AppUtil;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,9 +56,12 @@ public class CardSchemeController {
     CardSchemeRepository Repo;
     @Autowired
     AppUtil util;
+    
+       @Autowired
+    KafkaProducerService producer;
 
     @GetMapping(value = "/verify/{card_number}", produces = "Application/json", consumes = "Application/json")
-    public ResponseEntity<?> cardScheme(@PathVariable("card_number") String card_number) {
+    public ResponseEntity<?> cardScheme(@PathVariable("card_number") String card_number) throws IOException {
 
         ResponseEntity resp = mintRest.connect(card_number);
         String countryName = "";
@@ -99,6 +104,15 @@ public class CardSchemeController {
                 data.put("scheme", schemeObj.getScheme());
                 data.put("type", schemeObj.getTransaction_type());
                 data.put("bank", schemeObj.getBank_name());
+                
+               // for(int i=0;i<data.size();i++){
+                
+                // producer.sendMessage(data);
+                
+              //  }
+               
+                 
+    
                 return util.returnSuccessResponse(data, "");
 
             } catch (JsonProcessingException ex) {
@@ -129,4 +143,6 @@ public class CardSchemeController {
 
     }
 
+    
+    
 }

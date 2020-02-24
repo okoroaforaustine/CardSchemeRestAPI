@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import com.mint.cardscheme.paginationdto.Payloads;
+import com.mint.cardscheme.service.KafkaProducerService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -26,7 +28,8 @@ import com.mint.cardscheme.paginationdto.Payloads;
  */
 @Component
 public class AppUtil {
-
+       @Autowired
+    KafkaProducerService producer;
     public ResponseEntity<Response> returnErrorResponse(List<Error> errors, HttpStatus code) {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -70,6 +73,7 @@ public class AppUtil {
         payload.setSuccess(ConstantsUtil.SUCCESS);
 
         payload.setPayload(responseObj);
+         producer.sendMessage(payload);
         return new ResponseEntity<Payload>(payload, httpHeaders, HttpStatus.OK);
     }
 
